@@ -1,0 +1,11 @@
+{"timestamp":"2025-09-08T23:00:00.121182","level":"info","event":"DAG bundles loaded: dags-folder","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager"}
+{"timestamp":"2025-09-08T23:00:00.121945","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/gtfs_realtime_dag.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-09-08T23:00:00.676294Z","level":"info","event":"[INFO] Téléchargement du flux GTFS-RT...","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T23:00:00.800740Z","level":"info","event":"[WARN] Aucun retard détecté dans le flux GTFS-RT pour le moment.","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T23:00:00.802440Z","level":"info","event":"[OK] Trip updates sauvegardés dans exports/trip_updates1.csv","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T23:00:00.805913Z","level":"info","event":"                                             trip_id stop_id delay_sec","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T23:00:00.806025Z","level":"info","event":"0  4523348-88_A_49_8801_19:30-RESEAU2023-88-Semai...    7207      None","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T23:00:00.806085Z","level":"info","event":"1  4523348-88_A_49_8801_19:30-RESEAU2023-88-Semai...    7262      None","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T23:00:00.806129Z","level":"info","event":"2  4523348-88_A_49_8801_19:30-RESEAU2023-88-Semai...    7238      None","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T23:00:00.806169Z","level":"info","event":"3  4523348-88_A_49_8801_19:30-RESEAU2023-88-Semai...    7045      None","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T23:00:00.807348","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator"}

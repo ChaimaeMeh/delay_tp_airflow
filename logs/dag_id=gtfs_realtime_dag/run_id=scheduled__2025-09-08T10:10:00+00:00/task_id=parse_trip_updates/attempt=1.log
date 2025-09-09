@@ -1,0 +1,12 @@
+{"timestamp":"2025-09-08T10:10:00.852822","level":"info","event":"DAG bundles loaded: dags-folder","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager"}
+{"timestamp":"2025-09-08T10:10:00.853561","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/gtfs_realtime_dag.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-09-08T10:10:01.455051Z","level":"info","event":"[INFO] Téléchargement du flux GTFS-RT...","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T10:10:01.713634Z","level":"info","event":"[WARN] Aucun retard détecté dans le flux GTFS-RT pour le moment.","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T10:10:01.736534Z","level":"info","event":"[OK] Trip updates sauvegardés dans exports/trip_updates1.csv","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T10:10:01.740397Z","level":"info","event":"                                             trip_id stop_id delay_sec","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T10:10:01.740538Z","level":"info","event":"0  4669779-62_A_46_6202_12:15-RESEAU2023-62-Semai...    2828      None","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T10:10:01.740601Z","level":"info","event":"1  4669779-62_A_46_6202_12:15-RESEAU2023-62-Semai...    1619      None","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T10:10:01.740647Z","level":"info","event":"2  4669779-62_A_46_6202_12:15-RESEAU2023-62-Semai...     139      None","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T10:10:01.740696Z","level":"info","event":"3  4669779-62_A_46_6202_12:15-RESEAU2023-62-Semai...     144      None","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T10:10:01.740813Z","level":"info","event":"4  4669779-62_A_46_6202_12:15-RESEAU2023-62-Semai...    1161      None","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T10:10:01.742981","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator"}

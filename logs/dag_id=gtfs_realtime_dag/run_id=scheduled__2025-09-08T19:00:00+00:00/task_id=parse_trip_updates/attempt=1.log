@@ -1,0 +1,12 @@
+{"timestamp":"2025-09-08T19:00:00.885258","level":"info","event":"DAG bundles loaded: dags-folder","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager"}
+{"timestamp":"2025-09-08T19:00:00.886095","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/gtfs_realtime_dag.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-09-08T19:00:01.450307Z","level":"info","event":"[INFO] Téléchargement du flux GTFS-RT...","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T19:00:01.643827Z","level":"info","event":"[WARN] Aucun retard détecté dans le flux GTFS-RT pour le moment.","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T19:00:01.650880Z","level":"info","event":"[OK] Trip updates sauvegardés dans exports/trip_updates1.csv","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T19:00:01.654422Z","level":"info","event":"                                            trip_id stop_id delay_sec","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T19:00:01.654516Z","level":"info","event":"0  6005439-B_A_50_VTB01_21:15-JANV2025-B-Semaine-03    2645      None","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T19:00:01.654573Z","level":"info","event":"1     6170764-L3_R_97__20:57-JANV2025-L3-Semaine-09    2602      None","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T19:00:01.654618Z","level":"info","event":"2     6170764-L3_R_97__20:57-JANV2025-L3-Semaine-09    2603      None","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T19:00:01.654659Z","level":"info","event":"3     6170764-L3_R_97__20:57-JANV2025-L3-Semaine-09    2605      None","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T19:00:01.654700Z","level":"info","event":"4     6170764-L3_R_97__20:57-JANV2025-L3-Semaine-09    2607      None","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-08T19:00:01.656501","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator"}

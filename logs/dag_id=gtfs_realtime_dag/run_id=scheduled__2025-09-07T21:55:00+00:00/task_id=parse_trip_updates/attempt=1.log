@@ -1,0 +1,5 @@
+{"timestamp":"2025-09-07T21:55:00.373498","level":"info","event":"DAG bundles loaded: dags-folder","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager"}
+{"timestamp":"2025-09-07T21:55:00.374543","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/gtfs_realtime_dag.py","logger":"airflow.models.dagbag.DagBag"}
+{"timestamp":"2025-09-07T21:55:01.125963Z","level":"info","event":"[INFO] Téléchargement du flux GTFS-RT...","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-07T21:55:01.249473Z","level":"info","event":"[ERREUR] Impossible de parser le GTFS-RT : [Errno 13] Permission denied: 'data/gtfs_rt_trip_update.pb'","chan":"stdout","logger":"task"}
+{"timestamp":"2025-09-07T21:55:01.251140","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator"}

@@ -1,0 +1,6 @@
+apache-airflow==2.9.3
+pandas
+duckdb
+pyarrow
+requests
+gtfs-realtime-bindings
