@@ -25,5 +25,6 @@ with DAG(
     t1_cleanup = PythonOperator(
         task_id="cleanup_old_files",
         python_callable=cleanup_old_files,
+        op_kwargs={"days": 7},  # supprimer les fichiers > 7 jours
         on_failure_callback=alert_if_failed
     )

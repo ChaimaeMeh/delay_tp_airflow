@@ -1,15 +1,16 @@
-from airflow import DAG
-from airflow.operators.python import PythonOperator
+from airflow.decorators import dag, task
 from datetime import datetime, timedelta
+from pathlib import Path
+import logging
 import sys
-sys.path.append("/opt/airflow")
-from scripts.parse_trip_updates import parse_trip_updates
-from scripts.parse_vehicle_positions import parse_vehicle_positions
-from scripts.fused_gtfs import fuse_gtfs
+
+sys.path.append(str(Path("/opt/airflow").resolve()))
+from scripts.parse_trip_updates import parse_trip_updates_to_csv
+from scripts.parse_vehicule_positions import parse_vehicle_positions_to_csv
 from scripts.validate_data import validate_data
 from scripts.utils import alert_if_failed
 
-default_args = {
+DEFAULT_ARGS = {
     "owner": "airflow",
     "depends_on_past": False,
     "email_on_failure": False,
@@ -17,38 +18,65 @@ default_args = {
     "retry_delay": timedelta(minutes=1),
 }
 
-with DAG(
-    dag_id="gtfs_realtime_dag",
-    default_args=default_args,
-    description="GTFS-RT Trip Updates + Vehicle Positions + Fusion",
-    schedule="*/5 * * * *",  # toutes les 5 minutes
+@dag(
+    dag_id="gtfs_realtime_parsing_taskflow",
+    default_args=DEFAULT_ARGS,
+    schedule="*/5 * * * *",
     start_date=datetime(2025, 9, 5),
     catchup=False,
     tags=["gtfs", "realtime"],
-) as dag:
+)
+def gtfs_realtime_parsing():
 
-    t1_trip_updates = PythonOperator(
-        task_id="parse_trip_updates",
-        python_callable=parse_trip_updates,
-        on_failure_callback=alert_if_failed
-    )
+    @task(on_failure_callback=alert_if_failed)
+    def parse_trip_updates_task() -> str:
+        data_dir = Path("/opt/airflow/data/gtfs_rt")
+        export_dir = Path("/opt/airflow/exports/gtfs_rt")
+        csv_path = parse_trip_updates_to_csv(
+            url="https://ara-api.enroute.mobi/rla/gtfs/trip-updates",
+            data_dir=data_dir,
+            export_dir=export_dir
+        )
+        return str(csv_path) 
 
-    t2_vehicle_positions = PythonOperator(
-        task_id="parse_vehicle_positions",
-        python_callable=parse_vehicle_positions,
-        on_failure_callback=alert_if_failed
-    )
+    @task(on_failure_callback=alert_if_failed)
+    def parse_vehicle_positions_task() -> str:
+        data_dir = Path("/opt/airflow/data/gtfs_rt")
+        export_dir = Path("/opt/airflow/exports/gtfs_rt")
+        csv_path = parse_vehicle_positions_to_csv(
+            url="https://ara-api.enroute.mobi/rla/gtfs/vehicle-positions",
+            data_dir=data_dir,
+            export_dir=export_dir
+        )
+        return str(csv_path)  
 
-    t3_fuse = PythonOperator(
-        task_id="fuse_gtfs",
-        python_callable=fuse_gtfs,
-        on_failure_callback=alert_if_failed
-    )
+    @task(on_failure_callback=alert_if_failed)
+    def validate_realtime(trip_csv: str, vehicle_csv: str) -> str:
+        """
+        Validation adaptée aux fichiers timestampés.
+        """
+        # Utiliser le répertoire contenant les CSV temps réel
+        rt_dir = Path(trip_csv).parent
+        
+        # Chercher le dernier dossier statique
+        static_root = Path("/opt/airflow/data/gtfs_static")
+        latest_static = max(static_root.glob("*"), key=lambda p: p.stat().st_mtime)
+        
+        return validate_data(
+            static_dir=latest_static,
+            rt_dir=rt_dir
+        )
 
-    t4_validate = PythonOperator(
-        task_id="validate_gtfs_realtime",
-        python_callable=validate_data,
-        on_failure_callback=alert_if_failed
-    )
+    @task
+    def log_files(trip_csv: str, vehicle_csv: str):
+        logging.info("Trip Updates CSV : %s", trip_csv)
+        logging.info("Vehicle Positions CSV : %s", vehicle_csv)
+        return True
 
-    [t1_trip_updates, t2_vehicle_positions] >> t3_fuse >> t4_validate
+    # Orchestration
+    trip_csv = parse_trip_updates_task()
+    vehicle_csv = parse_vehicle_positions_task()
+    validate_realtime(trip_csv, vehicle_csv)
+    log_files(trip_csv, vehicle_csv)
+
+gtfs_realtime_parsing_dag = gtfs_realtime_parsing()

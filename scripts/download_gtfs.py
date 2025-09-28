@@ -1,44 +1,39 @@
+import logging
 import requests
 import zipfile
-import os
-import pandas as pd
-import logging
+from pathlib import Path
+from datetime import datetime
 
-# URL GTFS statique Lignes d’Azur
-URL = "https://chouette.enroute.mobi/api/v1/datas/OpendataRLA/gtfs.zip"
-DATA_DIR = "data"
-ZIP_PATH = os.path.join(DATA_DIR, "gtfs_static.zip")
-OUTPUT_DIR = os.path.join(DATA_DIR, "gtfs_static")
+def download_gtfs_static(url: str, data_dir: Path, timeout: int = 30) -> Path:
+    """
+    Télécharge le zip GTFS statique depuis `url`, l'extrait dans `data_dir/gtfs_static/<YYYYMMDD_HHMMSS>/`,
+    et retourne le chemin du dossier extrait. Conserve l'idempotence (ne retélécharge/pass réécrit si déjà présent).
+    """
+    run_ts = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+    out_dir = data_dir / "gtfs_static" / run_ts
+    zip_path = data_dir / "gtfs_static.zip"
 
-def download_gtfs():
-    # dossier local
-    os.makedirs(DATA_DIR, exist_ok=True)
+    logging.info(" Démarrage téléchargement GTFS statique depuis %s", url)
+    out_dir.mkdir(parents=True, exist_ok=True)
 
-    # téléchargement
+    if zip_path.exists():
+        logging.info("Le fichier ZIP %s existe déjà — pas de nouveau téléchargement", zip_path)
+    else:
+        try:
+            resp = requests.get(url, timeout=timeout)
+            resp.raise_for_status()
+            zip_path.write_bytes(resp.content)
+            logging.info("Téléchargement réussi dans %s", zip_path)
+        except Exception as e:
+            logging.error("Erreur lors du téléchargement : %s", e, exc_info=True)
+            raise
+
     try:
-        logging.info("Téléchargement du GTFS statique...")
-        response = requests.get(URL, timeout=30)
-        response.raise_for_status()
-
-        with open(ZIP_PATH, "wb") as f:
-            f.write(response.content)
-
-    # extraction
-        logging.info("Extraction du ZIP...")
-        with zipfile.ZipFile(ZIP_PATH, 'r') as zip_ref:
-            zip_ref.extractall(OUTPUT_DIR)
-
-        logging.info(f"Fichiers extraits dans {OUTPUT_DIR}/")
-
-
-
-   # Aperçu rapide (facultatif)
-        stop_times_path = os.path.join(OUTPUT_DIR, "stop_times.txt")
-        stop_times_df = pd.read_csv(stop_times_path, nrows=5)
-        logging.info("Aperçu stop_times.txt :\n%s", stop_times_df.head())
-
-        return f"Téléchargement réussi : {OUTPUT_DIR}"
-
+        with zipfile.ZipFile(zip_path, 'r') as z:
+            z.extractall(out_dir)
+        logging.info("Extraction réussie dans %s", out_dir)
     except Exception as e:
-        logging.error(f"Erreur téléchargement/extraction GTFS : {e}")
-        raise RuntimeError(f"Impossible de télécharger ou d'extraire le GTFS : {e}")
+        logging.error("Erreur lors de l'extraction du zip : %s", e, exc_info=True)
+        raise
+
+    return out_dir

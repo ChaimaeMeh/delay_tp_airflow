@@ -1,0 +1,16 @@
+__pycache__/
+venv/
+
+# Airflow
+/airflow/logs/
+/airflow/plugins/
+/dags/__pycache__/
+/logs/
+/warehouse/__pycache__/
+/warehouse/*.db
+
+# Data temporaires / exports
+/data/
+/exports/
+/tmp/
+/*.zip
